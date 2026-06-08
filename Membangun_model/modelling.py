@@ -8,7 +8,7 @@ import mlflow.sklearn
 mlflow.sklearn.autolog()
 
 # Load data preprocessed
-df = pd.read_csv("Membangun_model/dataset_preprocessing/dataset_preprocessed.csv")
+df = pd.read_csv("dataset_preprocessed.csv")
 X = df.drop("zone_1_power_consumption", axis=1)
 y = df["zone_1_power_consumption"]
 
