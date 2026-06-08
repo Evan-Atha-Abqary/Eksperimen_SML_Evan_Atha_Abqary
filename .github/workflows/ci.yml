@@ -28,13 +28,17 @@ jobs:
           cd Workflow-CI/MLProject
           mlflow run . --env-manager=local
 
-      - name: Build MLflow Docker Image
+      - name: Generate Dockerfile & Build Model (Plan B)
         run: |
           cd Workflow-CI/MLProject
           RUN_ID=$(cat run_id.txt | tr -d '\r\n')
-          echo "Membangun Docker dari Run ID: $RUN_ID"
-          # Menggunakan path folder lokal secara langsung agar Docker BuildKit tidak error
-          mlflow models build-docker -m "mlruns/0/$RUN_ID/artifacts/model" -n evanatha/msml-model:latest
+          
+          # 1. Minta MLflow membuatkan resep Dockerfile-nya (disimpan di folder docker_build)
+          mlflow models generate-dockerfile -m "mlruns/0/$RUN_ID/artifacts/model" -d docker_build
+          
+          # 2. Masuk ke folder resep tersebut dan bangun Docker-nya secara manual (Sangat kebal error!)
+          cd docker_build
+          docker build -t evanatha/msml-model:latest .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
