@@ -1,0 +1,37 @@
+Berikut adalah salinan konfigurasi CI Workflow (.yml) yang digunakan:
+
+name: Automated Data Preprocessing
+
+on:
+  push:
+    paths:
+      - 'data_raw/**'
+      - 'preprocessing/automate_evan.py'
+  workflow_dispatch: # Mengizinkan trigger manual dari web GitHub
+
+jobs:
+  preprocess:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Run preprocessing script
+        run: python preprocessing/automate_evan.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data_preprocessing/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update preprocessed data via GitHub Actions" && git push)
