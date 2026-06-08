@@ -7,7 +7,7 @@ import os
 
 # Load data preprocessed
 # Path disesuaikan karena script akan dijalankan dari dalam folder MLProject
-df = pd.read_csv("dataset_preprocessing/dataset_preprocessed.csv")
+df = pd.read_csv("dataset_preprocessed.csv")
 X = df.drop("zone_1_power_consumption", axis=1)
 y = df["zone_1_power_consumption"]
 
